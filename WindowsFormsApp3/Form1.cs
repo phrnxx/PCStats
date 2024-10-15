@@ -11,19 +11,19 @@ namespace PCStatsApp
 {
     public partial class MainForm : Form
     {
-       
+
         private readonly Computer computer;
         private Thread updateThread;
         private bool isFormClosing = false;
         private string processorName = "";
         private string gpuName = "";
         private string motherboardName = "";
-       
+
 
         public MainForm()
         {
             InitializeComponent();
-           
+
 
             computer = new Computer();
             computer.Open();
@@ -42,24 +42,24 @@ namespace PCStatsApp
             updateThread.IsBackground = true;
             updateThread.Start();
 
-            groupBox1.Text = "Процессор";
-            groupBox2.Text = "Видеокарта";
-            groupBox3.Text = "Память";
+            groupBox1.Text = "Processor";
+            groupBox2.Text = "Graphics Card";
+            groupBox3.Text = "Memory";
 
 
             this.FormClosing += MainForm_FormClosing;
         }
 
-       
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             isFormClosing = true;
             if (updateThread != null && updateThread.IsAlive)
             {
                 updateThread.Interrupt();
-                if (!updateThread.Join(600)) // Обновление каждие 6с 
+                if (!updateThread.Join(600))
                 {
-                    updateThread.Abort(); // Принудительное завершение потока
+                    updateThread.Abort();
                 }
             }
             computer.Close();
@@ -79,7 +79,7 @@ namespace PCStatsApp
             }
             catch (ThreadInterruptedException)
             {
-                // Поток был прерван, выйти из метода
+
             }
         }
 
@@ -136,7 +136,7 @@ namespace PCStatsApp
                     if (numberOfCores > 0)
                         processorTemperature /= numberOfCores;
                     else if (processorBrand == "AMD")
-                        processorTemperature /= 1; 
+                        processorTemperature /= 1;
 
                     if (loadSensorsCount > 0)
                         processorLoad /= loadSensorsCount;
@@ -164,9 +164,9 @@ namespace PCStatsApp
         private void UpdateProcessorInfoUI(string processorName, string processorBrand, string processorModel, int numberOfCores, int roundedLoad, int roundedTemperature)
         {
             label14.Text = $"{processorBrand} {processorModel}";
-            label1.Text = $"Количество ядер: {numberOfCores}";
-            label2.Text = $"Загрузка процессора: {roundedLoad}%";
-            label3.Text = $"Температура процессора: {roundedTemperature}°C";
+            label1.Text = $"Number of Cores: {numberOfCores}";
+            label2.Text = $"CPU Load: {roundedLoad}%";
+            label3.Text = $"CPU Temperature: {roundedTemperature}°C";
         }
 
         //GPU
@@ -228,10 +228,10 @@ namespace PCStatsApp
 
         private void UpdateGPUInfoUI(string gpuName, float gpuTemperature, float gpuLoad, float gpuMemoryUsage, float gpuVideoEngineLoad, float gpuBusInterfaceLoad)
         {
-            groupBox2.Text = $"Видеокарта: {gpuName}";
-            label6.Text = $"Температура GPU: {gpuTemperature}°C";
-            label7.Text = $"Загрузка GPU: {gpuLoad}%";
-            label10.Text = $"Загрузка шины GPU: {gpuBusInterfaceLoad}%";
+            groupBox2.Text = $"Graphics Card: {gpuName}";
+            label6.Text = $"GPU Temperature: {gpuTemperature}°C";
+            label7.Text = $"GPU Load: {gpuLoad}%";
+            label10.Text = $"GPU Bus Interface Load: {gpuBusInterfaceLoad}%";
         }
 
         //RAM
@@ -247,13 +247,15 @@ namespace PCStatsApp
 
                 this.Invoke((MethodInvoker)delegate
                 {
-                    label11.Text = $"Общая память: {totalMemoryGB} GB";
-                    label12.Text = $"Свободная память: {freeMemoryGB} GB";
-                    label13.Text = $"Загрузка памяти: {memoryLoad}%";
+                    label11.Text = $"Total Memory: {totalMemoryGB} GB";
+                    label12.Text = $"Free Memory: {freeMemoryGB} GB";
+                    label13.Text = $"Memory Load: {memoryLoad}%";
                 });
 
                 break;
             }
         }
+
+
     }
 }
